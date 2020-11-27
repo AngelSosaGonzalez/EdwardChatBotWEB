@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<body>
+    <!--ChatBot-->
+    <div class="card card-body col-md-5 container">
+        <!--Inicio (Mensaje de bienvenida)-->
+        <div id="Edward">
+            <p class="EdwardInicio">
+                <span>Hola soy Edward, tu ChatBot de cabecera</span>
+            </p>
+        </div>
+    
+        <!--Parte de ingreso de datos (mensaje del ususario)-->
+        <div id="UsuMensj">
+            <input id="Mensaje" class="form-control" type="text" name="msg" placeholder="Vamos escribe algo">
+           <div class="pt-2">
+            <input id ="Boton" class="btn btn-success" type = "submit" value="Enviar" >
+           </div>
+        </div>
+    </div>
+
+
+    <!--Esta parte ira nuestro JS-->
+    <script>
+        function GetMensaje(){
+            //Ingreso del mensaje por parte del ususario
+            var TextoMensj = $('#Mensaje').val();
+            //Mostramos las repuestas de nuestro ChatBot
+            var BotResp = '<p class="IngresoUsu card card-body text-right"><span>' + TextoMensj + '</span></p>';
+            $('#Mensaje').val("");
+            $('#Edward').append(BotResp);
+            document.getElementById("UsuMensj").scrollIntoView({block:'start', behavior:'smooth'});
+            //Llamamos a la ruta de Chat
+            $.get('/chat',{msg: TextoMensj}).done(function(data){
+                var EdwardBot = '<p class="EdwardInicio card text-white bg-primary card-body"><span>' + data + '</span></p>';
+                $('#Edward').append(EdwardBot);
+                document.getElementById("UsuMensj").scrollIntoView({block:'start', behavior:'smooth'});
+            });
+        }
+
+        $('#Mensaje').keypress(function(e){
+            if(e.which == 13 && document.getElementById("UsuMensj").value != "" ){
+                GetMensaje();
+            }
+        });
+        $('#Boton').click(function(){
+            if(document.getElementById("UsuMensj").value != "" ){
+                GetMensaje();
+            }
+            
+        });
+
+    </script>
+</body>
+{% endblock %}
